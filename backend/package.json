@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for to-do list app project",
+  "keywords": [
+    "to-do"
+  ],
+  "homepage": "https://github.com/nananotosaki/curly-tribble#readme",
+  "bugs": {
+    "url": "https://github.com/nananotosaki/curly-tribble/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nananotosaki/curly-tribble.git"
+  },
+  "license": "ISC",
+  "author": "nana",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
