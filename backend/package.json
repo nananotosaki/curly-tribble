@@ -16,8 +16,9 @@
   "license": "ISC",
   "author": "nana",
   "type": "commonjs",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node server.js",
     "test": "jest"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "jest": "^30.3.0",
+    "mongodb-memory-server": "^11.0.1",
     "supertest": "^7.2.2"
   }
 }

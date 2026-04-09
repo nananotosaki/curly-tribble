@@ -1,8 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = 3000;
-const connectDB = require('./config/db.js');
 const cors = require("cors");
 
 // Middleware to parse JSON request bodies
@@ -26,10 +24,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start the server after connecting to the database
-// connectDB().then(() => {
-//   app.listen(port, () => {
-//     console.log(`app listening at http://localhost:${port}`);
-//   });
-// }); 
 module.exports = app;
