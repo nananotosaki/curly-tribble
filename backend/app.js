@@ -1,21 +1,40 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = 3000;
-const router = require('./routes/todos.js');
+const connectDB = require('./config/db.js');
+const cors = require("cors");
+const bodyParser = require("body-parser");
+
 // Middleware to parse JSON request bodies
+app.use(bodyParser.json());
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+// Use the todo and auth routes
+app.use('/api/v1/todo', require('./routes/todos.js'));
+app.use('/api/v1/auth', require('./routes/auth.js'));
 
-// Use the todos routes
-app.use('/api/v1/todo', router);
+app.use(function (req, res) {
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+});
 
-// Define a route for GET requests to the root URL
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello World from Express!' });
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.send({
+    error: {
+      message: err.message,
+    },
+  });
+});
+app.get("/", (req, res) => {
+  res.json({ message: "Server active." });
 });
 
 // Start the server after connecting to the database
-require('dotenv').config();
-const connectDB = require('./config/db.js');
 connectDB().then(() => {
   app.listen(port, () => {
     console.log(`app listening at http://localhost:${port}`);
