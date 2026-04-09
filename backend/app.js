@@ -4,10 +4,8 @@ const app = express();
 const port = 3000;
 const connectDB = require('./config/db.js');
 const cors = require("cors");
-const bodyParser = require("body-parser");
 
 // Middleware to parse JSON request bodies
-app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -15,11 +13,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/v1/todo', require('./routes/todos.js'));
 app.use('/api/v1/auth', require('./routes/auth.js'));
 
-app.use(function (req, res) {
-  res.header(
-    "Access-Control-Allow-Headers",
-    "x-access-token, Origin, Content-Type, Accept"
-  );
+app.get("/", (req, res) => {
+  res.json({ message: "Server active." });
 });
 
 app.use((err, req, res, next) => {
@@ -30,13 +25,11 @@ app.use((err, req, res, next) => {
     },
   });
 });
-app.get("/", (req, res) => {
-  res.json({ message: "Server active." });
-});
 
 // Start the server after connecting to the database
-connectDB().then(() => {
-  app.listen(port, () => {
-    console.log(`app listening at http://localhost:${port}`);
-  });
-}); 
+// connectDB().then(() => {
+//   app.listen(port, () => {
+//     console.log(`app listening at http://localhost:${port}`);
+//   });
+// }); 
+module.exports = app;

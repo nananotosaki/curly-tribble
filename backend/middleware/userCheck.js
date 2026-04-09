@@ -1,6 +1,6 @@
 const User = require("../models/user");
 
-checkDuplicateUsernameOrEmail = async (req, res, next) => {
+const checkDuplicateUsernameOrEmail = async (req, res, next) => {
   try {
     const user = await User.findOne({
       $or: [{ username: req.body.username }, { email: req.body.email }],

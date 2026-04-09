@@ -1,18 +1,15 @@
 const Todo = require('../models/todo');
 
 // Get all todos
-const getAllTodos = async (req, res) => {
-    try {
-        const todos = await Todo.find();
+exports.getTodos = async (req, res) => {
+  try {
+        const todos = await Todo.find({ userId: req.userId });
         res.json(todos);
     }
     catch (error) {
         console.error(error.message);
         res.status(500).json({ error: 'Server error' });
     }
-};
-exports.getTodos = async (req, res) => {
-  await getAllTodos(req, res);
 };
 // get a single todo 
 const getTodoById = async (req, res) => {
@@ -27,7 +24,10 @@ const getTodoById = async (req, res) => {
         if (error.message.includes('Cast to ObjectId failed')) {
             return res.status(400).json({ error: 'Invalid todo ID' });
         }
-    }    res.status(500).json({ error: 'Server error' });
+        else {
+            res.status(500).json({ error: 'Server error' });
+        }
+    }    
 };
 exports.getTodo = async (req, res) => {
   await getTodoById(req, res);

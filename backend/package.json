@@ -11,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nananotosaki/curly-tribble.git"
+    "url": "git+https://github.com/nananotosaki/curly-tribble.git/backend"
   },
   "license": "ISC",
   "author": "nana",
   "type": "commonjs",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

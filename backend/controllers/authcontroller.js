@@ -2,7 +2,7 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
     const givenUsername = req.body.username;
     const givenMail = req.body.email;
@@ -16,14 +16,14 @@ exports.register = async (req, res) => {
       await user.save();
       res.send({ message: "User registered successfully!" });
     } else {
-      res.status(500).send({ message: "Missing info given" });
+      res.status(400).send({ message: "Missing info given" });
     }
   } catch (err) {
     next(err);
   }
 };
 
-exports.getUserData = async (req, res) => {
+exports.getUserData = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId).exec();
     res.send({ username: user.username });
