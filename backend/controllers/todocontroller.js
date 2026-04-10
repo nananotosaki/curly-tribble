@@ -14,7 +14,7 @@ exports.getTodos = async (req, res) => {
 // get a single todo 
 const getTodoById = async (req, res) => {
     try {
-        const todo = await Todo.findById(req.params.id);
+        const todo = await Todo.findOne({ _id: req.params.id, userId: req.userId });
         if (!todo) {
             return res.status(404).json({ error: 'Todo not found' });
         }
@@ -57,7 +57,7 @@ const createTodo = async (req, res) => {
             }
             const todo = new Todo({
                 userId: req.userId,
-                title: req.body.title,
+                ...req.body
             });
             await todo.save();
             res.status(201).json(todo);
@@ -76,33 +76,27 @@ exports.createTodo = async (req, res) => {
   await createTodo(req, res);
 };
 // update a todo
-const updateTodo = (prop, value) => async (req, res) => {
+exports.updateTodo = async (req, res) => {
   try {
     const todo = await Todo.findOneAndUpdate(
-      { _id: req.params.id },
-      { $set: { [prop]: value } },
-      { new: true, useFindAndModify: false }
+        { _id: req.params.id, userId: req.userId },
+        { $set: req.body },
+        { new: true }
     );
     if (!todo) {
       return res.status(404).json({ error: 'Todo not found' });
     }
-    res.json(todo);  // Or call getAllTodos(req, res) if you want all todos
+    res.json(todo);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: 'Server error' });
   }
 };
-exports.markDone = updateTodo("completed", true);
-
-exports.markUnDone = updateTodo("completed", false);
-
-exports.changeTitle = (req, res) => updateTodo("title", req.body.title)(req, res);
-exports.changeDescription = (req, res) => updateTodo("description", req.body.description)(req, res);
 
 // delete a todo
 const deleteTodo = async (req, res) => {
     try {
-        const todo = await Todo.findByIdAndDelete(req.params.id);
+        const todo = await Todo.findOneAndDelete({ _id: req.params.id, userId: req.userId });
         if (!todo) {
             return res.status(404).json({ error: 'Todo not found' });
         }
