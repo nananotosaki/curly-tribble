@@ -26,7 +26,11 @@ exports.register = async (req, res, next) => {
 exports.getUserData = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId).exec();
-    res.send({ username: user.username });
+    res.send({ 
+    id: user._id, 
+    username: user.username, 
+    email: user.email 
+    });
   } catch (err) {
     next(err);
   }
