@@ -16,6 +16,7 @@ function Auth() {
     try {
         const data = await login(email, password);
         localStorage.setItem('token', data.accessToken);
+        window.dispatchEvent(new Event('authChange'));
         navigate('/todos');
     } catch (err) {
         setError(err.response?.data?.message || 'Login failed');
@@ -27,6 +28,7 @@ function Auth() {
         await register(username, email, password);
         const data = await login(email, password);
         localStorage.setItem('token', data.accessToken);
+        window.dispatchEvent(new Event('authChange'));
         navigate('/todos');
     } catch (err) {
         setError(err.response?.data?.message || 'Registration failed');
@@ -34,56 +36,47 @@ function Auth() {
   }
 
   return (
-    <div>
+    <div className="auth-container">
+    <div className="auth-card">
       <h1>{isLogin ? 'Login' : 'Register'}</h1>
       
-      {isLogin ? (
-        <form onSubmit={handleSubmit}>
-          <input 
-            type="email" 
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input 
-            type="password" 
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit">Login</button>
-          {error && <p>{error}</p>}
-        </form>
-        
-      ) : (
-        <form onSubmit={handleRegisterSubmit}>
+      <form onSubmit={isLogin ? handleSubmit : handleRegisterSubmit}>
+        {!isLogin && (
           <input 
             type="text" 
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input 
-            type="email" 
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input 
-            type="password" 
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit">Register</button>
-          {error && <p>{error}</p>}
-        </form>
-      )}
+        )}
+        <input 
+          type="email" 
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input 
+          type="password" 
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        
+        <button type="submit" className="btn-primary">
+          {isLogin ? 'Login' : 'Register'}
+        </button>
+        
+        {error && <p className="error-message">{error}</p>}
+      </form>
 
-      <button onClick={() => { setIsLogin(!isLogin); setError(''); }}>
-        {isLogin ? 'Switch to Register' : 'Switch to Login'}
-      </button>
+      <div className="auth-switch">
+        <span>{isLogin ? "Don't have an account?" : "Already have an account?"}</span>
+        <button className="btn-link" onClick={() => { setIsLogin(!isLogin); setError(''); }}>
+          {isLogin ? 'Switch to Register' : 'Switch to Login'}
+        </button>
+      </div>
     </div>
+  </div>
   );
 }
 

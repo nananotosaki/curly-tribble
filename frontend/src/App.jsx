@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Auth from './pages/Auth';
 import Todos from './pages/Todos';
 import Accounts from './pages/Account';
+import Navbar from './components/Navbar';
+
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -14,17 +16,17 @@ function ProtectedRoute({ children }) {
 function App() {
   return (
     <BrowserRouter>
-      <nav>
+      <Navbar>
         <Link to="/auth">Authentication</Link> |{" "}
         <Link to="/todos">Todos</Link> |{" "}
-        <Link to="/accounts">Accounts</Link>
-      </nav>
+        <Link to="/account">Accounts</Link>
+      </Navbar>
 
       {/* Routes */}
       <Routes>
         <Route path="/auth" element={<Auth />} />
         <Route path="/todos" element={<ProtectedRoute><Todos /></ProtectedRoute>} />
-        <Route path="/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
+        <Route path="/account" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

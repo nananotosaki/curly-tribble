@@ -81,7 +81,7 @@ exports.updateTodo = async (req, res) => {
     const todo = await Todo.findOneAndUpdate(
         { _id: req.params.id, userId: req.userId },
         { $set: req.body },
-        { new: true }
+        { returnDocument: 'after' }
     );
     if (!todo) {
       return res.status(404).json({ error: 'Todo not found' });

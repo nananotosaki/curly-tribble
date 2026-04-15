@@ -74,11 +74,20 @@ function Todos() {
 
   // calculate priority based on due date
   const isUrgent = (dueDate) => {
-  if (!dueDate) return false;
-  const now = new Date();
-  const due = new Date(dueDate);
-  const diffInHours = (due - now) / (1000 * 60 * 60);
-  return diffInHours > 0 && diffInHours <= 24; // Due within 24 hours
+    if (!dueDate) return false;
+    const now = new Date();
+    const due = new Date(dueDate);
+    const diffInHours = (due - now) / (1000 * 60 * 60);
+    return diffInHours > 0 && diffInHours <= 24; // Due within 24 hours
+  };
+
+  // calculate if passed due date
+  const isDue = (dueDate) => {
+    if (!dueDate) return false;
+    const now = new Date();
+    const due = new Date(dueDate);
+    const diffInHours = (due - now) / (1000 * 60 * 60);
+    return diffInHours < 0 && diffInHours != 0
   };
   
 
@@ -97,61 +106,80 @@ function Todos() {
     {/* Section 1: Active Tasks */}
     <h2>Active ({activeTodos.length})</h2>
     {activeTodos.map(todo => (
-        <div key={todo._id} className={isUrgent(todo.dueDate) ? 'urgent-border' : ''}>
-        {isUrgent(todo.dueDate) && <span className="badge">🔥 HIGH PRIORITY</span>}
-        <span>{todo.title}</span>
-        <input 
-          type="checkbox" 
-          checked={todo.completed} 
-          onChange={() => handleComplete(todo._id, true)} 
-        />
+      <div key={todo._id} className={`todo-item ${isDue(todo.dueDate) ? 'overdue-border' : isUrgent(todo.dueDate) ? 'urgent-border' : ''}`}>
+        {isDue(todo.dueDate) && <span className="badge badge-overdue">😨 OVERDUE</span>}
+        {isUrgent(todo.dueDate) && !isDue(todo.dueDate) && <span className="badge">🔥 URGENT</span>}
+
         {editingId === todo._id ? (
-        <div className="edit-form">
-          <input 
-            type="text"
-            value={editData.title} 
-            onChange={(e) => setEditData({...editData, title: e.target.value})} 
-          />
-          <textarea 
-            value={editData.description} 
-            onChange={(e) => setEditData({...editData, description: e.target.value})} 
-            placeholder="Description"
-          />
-          <input 
-            type="date"
-            value={editData.dueDate} 
-            onChange={(e) => setEditData({...editData, dueDate: e.target.value})} 
-          />
-          <button onClick={() => handleSaveEdit(todo._id)}>Save</button>
-          <button onClick={() => setEditingId(null)}>Cancel</button>
-        </div>
+          /* --- EDIT MODE --- */
+          <div className="edit-form">
+            <input 
+              type="text"
+              value={editData.title} 
+              onChange={(e) => setEditData({...editData, title: e.target.value})} 
+            />
+            <textarea 
+              value={editData.description} 
+              onChange={(e) => setEditData({...editData, description: e.target.value})} 
+              placeholder="Description"
+            />
+            <input 
+              type="date"
+              value={editData.dueDate} 
+              onChange={(e) => setEditData({...editData, dueDate: e.target.value})} 
+            />
+            <button onClick={() => handleSaveEdit(todo._id)}>Save</button>
+            <button onClick={() => setEditingId(null)}>Cancel</button>
+          </div>
         ) : (
+          /* --- DISPLAY MODE --- */
           <div className="todo-display">
-            <h3>{todo.title}</h3>
-            <p>{todo.description}</p>
-            {todo.dueDate && <small>Due: {new Date(todo.dueDate).toLocaleDateString()}</small>}
-            <button onClick={() => startEdit(todo)}>Edit</button>
+            <div className="todo-content">
+              <input 
+                type="checkbox" 
+                checked={todo.completed} 
+                onChange={() => handleComplete(todo._id, true)} 
+              />
+              <span className="todo-title">{todo.title}</span>
+              {todo.description && <p className="todo-desc">{todo.description}</p>}
+              {todo.dueDate && <small>Due: {new Date(todo.dueDate).toLocaleDateString()}</small>}
+            </div>
+            
+            <div className="todo-actions">
+              <button onClick={() => startEdit(todo)}>Edit</button>
+              <button onClick={() => handleDelete(todo._id)}>Delete</button>
+            </div>
           </div>
         )}
-        <button onClick={() => handleDelete(todo._id)}>Delete</button>
       </div>
     ))}
 
     <hr />
 
-    {/* Section 2: Completed Tasks */}
-    <h2>Completed ({completedTodos.length})</h2>
-    {completedTodos.map(todo => (
-      <div key={todo._id} className="todo-item" style={{ opacity: 0.6 }}>
+      {/* Section 2: Completed Tasks */}
+      <h2>Completed ({completedTodos.length})</h2>
+      <div className="completed-list">
+        {completedTodos.map(todo => (
+          <div key={todo._id} className="todo-item completed-item">
+      {/* Grouping these two keeps them on the left together */}
+      <div className="todo-content">
         <input 
           type="checkbox" 
           checked={todo.completed} 
           onChange={() => handleComplete(todo._id, false)} 
         />
-        <strike>{todo.title}</strike>
-        <button onClick={() => handleDelete(todo._id)}>Delete</button>
+        <strike className="todo-title">{todo.title}</strike>
       </div>
-    ))}
+      
+      {/* This will now be pushed to the far right */}
+      <div className="todo-actions">
+        <button className="btn-delete" onClick={() => handleDelete(todo._id)}>
+          Delete
+        </button>
+      </div>
+    </div>
+        ))}
+    </div>
   </div>
 );
 }

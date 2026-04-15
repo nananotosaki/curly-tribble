@@ -25,37 +25,42 @@ function Account() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    window.dispatchEvent(new Event('authChange'));
+    navigate('/auth');
   };
 
   if (loading) return <div>Loading...</div>;
 
+  // Account.jsx
   return (
-    <div>
-      <h2>Account Profile</h2>
-      
-      <div>
-        <div>
-          <span>User ID</span>
-          <span>{user?.id}</span>
+    <div className="account-container">
+      <div className="account-card">
+        <h2>Account Profile</h2>
+        
+        <div className="profile-details">
+          <div className="profile-row">
+            <span className="label">User ID</span>
+            <span className="value">{user?.id}</span>
+          </div>
+
+          <div className="profile-row">
+            <span className="label">Username</span>
+            <span className="value">{user?.username}</span>
+          </div>
+
+          <div className="profile-row">
+            <span className="label">Email Address</span>
+            <span className="value">{user?.email}</span>
+          </div>
         </div>
 
-        <div>
-          <span>Username</span>
-          <span>{user?.username}</span>
-        </div>
-
-        <div>
-          <span>Email Address</span>
-          <span>{user?.email}</span>
-        </div>
+        <button 
+          className="btn-logout"
+          onClick={handleLogout}
+        >
+          Sign Out
+        </button>
       </div>
-
-      <button 
-        onClick={handleLogout}
-      >
-        Sign Out
-      </button>
     </div>
   );
 }
