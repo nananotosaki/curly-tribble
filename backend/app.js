@@ -4,7 +4,11 @@ const app = express();
 const cors = require("cors");
 
 // Middleware to parse JSON request bodies
-app.use(cors());
+app.use(cors({
+  origin: process.env.REACT_APP, // Allow only frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // Use the todo and auth routes

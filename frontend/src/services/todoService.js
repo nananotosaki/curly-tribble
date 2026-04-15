@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api/v1/todo';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+const TODO_API = `${BASE_URL}/api/v1/todo`;
+
+const API_URL = TODO_API;
 
 //function to set Authheader
 const getAuthHeader = () => ({
