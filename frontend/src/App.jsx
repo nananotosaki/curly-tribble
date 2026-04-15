@@ -24,6 +24,7 @@ function App() {
 
       {/* Routes */}
       <Routes>
+        <Route path="/" element={<Navigate to="/auth" />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/todos" element={<ProtectedRoute><Todos /></ProtectedRoute>} />
         <Route path="/account" element={<ProtectedRoute><Accounts /></ProtectedRoute>} />
